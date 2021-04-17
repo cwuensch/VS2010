@@ -81,6 +81,17 @@ jobs:
     - name: Build x86
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
+        @set VSINSTALLDIR=C:\Program Files (x86)\Microsoft Visual Studio 10.0\
+        @set VCINSTALLDIR=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\
+        @set VS100COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\
+        @set DevEnvDir=%VSINSTALLDIR%Common7\IDE\
+        @set WindowsSdkDir=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\
+        @set FrameworkDir32=C:\Windows\Microsoft.NET\Framework\
+        @set FrameworkDir64=C:\Windows\Microsoft.NET\Framework64\
+        @set FrameworkVersion32=v4.0.30319
+        @set FrameworkVersion64=v4.0.30319
+        @set Framework35Version=v3.5
+        @set VCTargetsPath=C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\
         set
         "C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" /m /p:Configuration=Release /p:Platform=Win32 RS\RecStrip_VS\RecStrip.sln
         mv RecStrip_VS/Release/RecStrip.exe RecStrip_VS/Release/RecStrip_Win32.exe
