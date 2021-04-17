@@ -73,15 +73,15 @@ jobs:
         echo "{LIB}={%LIB%;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib}" >> $LIB
         echo "{INCLUDE}={C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include;%INCLUDE%}" >> $INCLUDE
           
-    - name: Initialize VCTools x86
-      run: call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
-      shell: cmd
+#    - name: Initialize VCTools x86
+#      run: call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+#      shell: cmd
 
     - name: Build x86
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
         set
-        "C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" /p:Configuration=Release /p:Platform=Win32 ${{env.SOLUTION_FILE_PATH}}
+        "C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" /m /p:Configuration=Release /p:Platform=Win32 RecStrip_VS\RecStrip.sln
         mv RecStrip_VS/Release/RecStrip.exe RecStrip_VS/Release/RecStrip_Win32.exe
       shell: cmd
 
