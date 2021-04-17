@@ -83,6 +83,7 @@ jobs:
         set
         "C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" /p:Configuration=Release /p:Platform=Win32 ${{env.SOLUTION_FILE_PATH}}
         mv RecStrip_VS/Release/RecStrip.exe RecStrip_VS/Release/RecStrip_Win32.exe
+      shell: cmd
 
     - name: Setup Environment x64
       run: |
