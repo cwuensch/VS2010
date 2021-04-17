@@ -36,7 +36,7 @@ jobs:
 #      run: choco install kb2519277
 
     - name: Run Windows SDK 7.1 installer
-      run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\WinSDKBuild\WinSDKBuild_x86.msi'
+      run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\WinSDKBuild\WinSDKBuild_x86.msi /quiet'
 
     - name: Run C Compiler x86 installer
       run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\vc_stdx86\vc_stdx86.msi /quiet'
@@ -80,7 +80,8 @@ jobs:
     - name: Build x86
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        "C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" /m /p:Configuration=Release /p:Platform=Win32 ${{env.SOLUTION_FILE_PATH}}
+        set
+        "C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" /p:Configuration=Release /p:Platform=Win32 ${{env.SOLUTION_FILE_PATH}}
         mv RecStrip_VS/Release/RecStrip.exe RecStrip_VS/Release/RecStrip_Win32.exe
 
     - name: Setup Environment x64
