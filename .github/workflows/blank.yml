@@ -72,6 +72,7 @@ jobs:
         echo "{LIB}={%LIB%;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Lib}" >> $LIB
         echo "{LIB}={%LIB%;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib}" >> $LIB
         echo "{INCLUDE}={C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include;%INCLUDE%}" >> $INCLUDE
+        echo "{VCTargetsPath}={C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\}" >> $VCTargetsPath
           
 #    - name: Initialize VCTools x86
 #      run: call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
