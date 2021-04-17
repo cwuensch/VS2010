@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build Docker container
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  docker:
+    name: Build Docker container
+    runs-on: windows-2019
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Build Docker container
+      run: |
+        docker run mcr.microsoft.com/windows/servercore:ltsc2016-amd64
+      
+    - name: Start Docker container
+      run: docker run --rm -v `pwd`:/vs --env VS="2010" --workdir "/vs" cwuensch/vs2010:test /m /p:Configuration=Release /p:Platform=Win32 RS\RecStrip_VS\RecStrip.sln
+      
+    - name: Push Docker container 
+      run: |
+        docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
+        docker push cwuensch/vs2010:test
+
+  test:
+    name: Test docker container
+    runs-on: windows-2019
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Start Docker container
+      run: |
+        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:\\source" --entrypoint "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\MSBuild.exe" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=Win32 C:\\source\\RecStrip_VS\\RecStrip.sln
+        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:\\source" --entrypoint "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\MSBuild.exe" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=x64 C:\\source\\RecStrip_VS\\RecStrip.sln

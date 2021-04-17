@@ -29,8 +29,8 @@ jobs:
 #      with:
 #        vs-version: '[10.0,10.1)'
        
-#    - name: Install vcexpress2010
-#      run: choco install vcexpress2010
+    - name: Install vcexpress2010
+      run: choco install vcexpress2010
 #
 #    - name: Install Visual C++ 2010 Service Pack 1 Compiler Update
 #      run: choco install kb2519277
@@ -46,12 +46,12 @@ jobs:
 
     - name: Download & extract Microsoft Windows SDK 7.1
       run: |
-        Expand-Archive -Path "WindowsSDK_7.1.zip" -DestinationPath "C:\Program Files (x86)\Microsoft SDKs\Windows\"
+        Expand-Archive -Force -Path "WindowsSDK_7.1.zip" -DestinationPath "C:\Program Files (x86)\Microsoft SDKs\Windows\"
 #        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.114&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile WindowsSDK_7.1.zip
 
     - name: Download & extract Microsoft VC 2010 Compilers
       run: |
-        Expand-Archive -Path "Compilers_2010_x86_x64.zip" -DestinationPath "C:\Program Files (x86)\Microsoft Visual Studio 10.0\"
+        Expand-Archive -Force -Path "Compilers_2010_x86_x64.zip" -DestinationPath "C:\Program Files (x86)\Microsoft Visual Studio 10.0\"
         copy vcvars32.bat "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\"
         copy vcvars64.bat "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\"
 #        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.120&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile Compilers_2010_x86_x64.zip
@@ -60,7 +60,7 @@ jobs:
 
     - name: Download & extract MSBuild config
       run: |
-        Expand-Archive -Path "MSBuild_x86.zip" -DestinationPath "C:\Program Files (x86)\MSBuild\"
+        Expand-Archive -Force -Path "MSBuild_x86.zip" -DestinationPath "C:\Program Files (x86)\MSBuild\"
 #        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.113&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile MSBuild_x86.zip
 
     - name: Setup Environment x86
@@ -99,7 +99,7 @@ jobs:
         @set PATH=%DevEnvDir%;%VCINSTALLDIR%BIN;%VSINSTALLDIR%Common7\Tools;%FrameworkDir32%%FrameworkVersion32%;%FrameworkDir32%%Framework35Version%;%PATH%
         set
         MSBuild /m /p:Configuration=Release /p:Platform=Win32 RS\RecStrip_VS\RecStrip.sln
-        mv RecStrip_VS/Release/RecStrip.exe RecStrip_VS/Release/RecStrip_Win32.exe
+#        mv RecStrip_VS/Release/RecStrip.exe RecStrip_VS/Release/RecStrip_Win32.exe
       shell: cmd
 
     - name: Setup Environment x64
@@ -119,8 +119,8 @@ jobs:
     - name: Build x64
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        msbuild /m /p:Configuration=Release /p:Platform=x64 ${{env.SOLUTION_FILE_PATH}}
-        mv RecStrip_VS/x64/Release/RecStrip.exe RecStrip_VS/x64/Release/RecStrip_x64.exe
+        msbuild /m /p:Configuration=Release /p:Platform=x64 RS\RecStrip_VS\RecStrip.sln
+#        mv RecStrip_VS/x64/Release/RecStrip.exe RecStrip_VS/x64/Release/RecStrip_x64.exe
 
     - name: Copy build artefact
       uses: actions/upload-artifact@v2
