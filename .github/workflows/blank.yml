@@ -37,22 +37,22 @@ jobs:
 
     - name: Download & extract Microsoft Windows SDK 7.1
       run: |
-#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.114&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile WindowsSDK_7.1.zip
         Expand-Archive -Path "WindowsSDK_7.1.zip" -DestinationPath "C:\Program Files (x86)\Microsoft SDKs\Windows\"
+#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.114&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile WindowsSDK_7.1.zip
 
     - name: Download & extract Microsoft VC 2010 Compilers
       run: |
-#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.120&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile Compilers_2010_x86_x64.zip
         Expand-Archive -Path "Compilers_2010_x86_x64.zip" -DestinationPath "C:\Program Files (x86)\Microsoft Visual Studio 10.0\"
-#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.117&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
-#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.118&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat"
         copy vcvars32.bat "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\"
         copy vcvars64.bat "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\"
+#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.120&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile Compilers_2010_x86_x64.zip
+#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.117&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
+#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.118&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat"
 
     - name: Download & extract MSBuild config
       run: |
-#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.113&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile MSBuild_x86.zip
         Expand-Archive -Path "MSBuild_x86.zip" -DestinationPath "C:\Program Files (x86)\MSBuild\"
+#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.113&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile MSBuild_x86.zip
 
     - name: Setup Environment x86
       run: |
