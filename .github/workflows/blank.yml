@@ -36,7 +36,7 @@ jobs:
 #      run: choco install kb2519277
 
     - name: Run Windows SDK 7.1 installer
-      run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\WinSDKBuild\WinSDKBuild_x86.msi /quiet'
+      run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\WinSDKBuild\WinSDKBuild_x86.msi'
 
     - name: Run C Compiler x86 installer
       run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\vc_stdx86\vc_stdx86.msi /quiet'
