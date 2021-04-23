@@ -1,17 +1,28 @@
 #FROM cwuensch/vs2010:vcexpress
 FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64
 
-#COPY VCExpressInstall/ C:/
-
 # Install Visual Studio 2010 Express
 RUN echo Downloading... \
- && powershell -command " Invoke-WebRequest -Uri http://mc.tms-taps.net/temp/VS/VCExpressInstall.zip -UseBasicParsing -OutFile C:/VCExpressInstall.zip " \
+ && echo  ALT: powershell -command " Invoke-WebRequest -Uri http://mc.tms-taps.net/temp/VS/VCExpressInstall.zip -UseBasicParsing -OutFile C:/VCExpressInstall.zip " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_1.zip -UseBasicParsing -OutFile C:/VCExpressInstall_1.zip " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_2.zip -UseBasicParsing -OutFile C:/VCExpressInstall_2.zip " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_3.zip -UseBasicParsing -OutFile C:/VCExpressInstall_3.zip " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_4.zip -UseBasicParsing -OutFile C:/VCExpressInstall_4.zip " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_5.z01 -UseBasicParsing -OutFile C:/VCExpressInstall_5.z01 " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_5.z02 -UseBasicParsing -OutFile C:/VCExpressInstall_5.z02 " \
+ && echo  ALT2: powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_dummy.zip -UseBasicParsing -OutFile C:/VCExpressInstall_dummy.zip " \
  && echo Extracting... \
- && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall.zip -DestinationPath C:/VCExpress " \
- && del "C:\VCExpressInstall*.zip" \
+ && echo  ALT: powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall.zip -DestinationPath C:/VCExpress " \
+ && copy /B "C:\VCExpressInstall_5.z01" + "C:\VCExpressInstall_5.z02" "C:\VCExpressInstall_5.zip" \
+ && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_1.zip -DestinationPath C:/VCExpress " \
+ && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_2.zip -DestinationPath C:/VCExpress " \
+ && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_3.zip -DestinationPath C:/VCExpress " \
+ && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_4.zip -DestinationPath C:/VCExpress " \
+ && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_5.zip -DestinationPath C:/VCExpress " \
+ && echo  ALT2: powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_dummy.zip -DestinationPath C:/VCExpress " \
+ && del "C:\VCExpressInstall_*" \
  && echo Installing... \
  && C:\VCExpress\Setup.exe /quiet \
- && start /wait cmd /c "C:\VCExpress\Setup.exe /quiet || call echo Installation returned: %^errorLevel%" \
  && echo Deleting... \
  && del "C:\VS_EXPBSLN_x64_deu.MSI" \
  && del "C:\VS_EXPBSLN_x64_deu.CAB" \
@@ -39,6 +50,7 @@ RUN echo Downloading... \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE2"
 
 #RUN setx VS100COMNTOOLS "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\"
+
 
 ## Install Windows SDK v7.1 AND create Windows SDK v7.1A
 #RUN echo Downloading... \
@@ -72,6 +84,8 @@ RUN echo Downloading... \
  && copy /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\*.*s" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\" \
  && copy /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\WinRes.h" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\" \
  && xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib\x64" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64\" \
+ && rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\de" \
+ && del /f /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\*.*" \
  && xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A" \
  && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/WinSDK71.reg -UseBasicParsing -OutFile C:\WinSDK71.reg " \
@@ -97,15 +111,17 @@ RUN echo Downloading... \
 RUN echo Downloading... \
  && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/vc_stdamd64/vc_stdamd64.msi -UseBasicParsing -OutFile C:\vc_stdamd64.msi " \
  && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/vc_stdamd64/vc_stdamd64.cab -UseBasicParsing -OutFile C:\vc_stdamd64.cab " \
- && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat -UseBasicParsing -OutFile 'C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/amd64/vcvars64.bat' " \
  && echo Installing... \
  && msiexec /i C:\vc_stdamd64.msi /quiet /qn \
  && echo Deleting... \
  && del "C:\vc_stdamd64.msi" \
- && del "C:\vc_stdamd64.cab"
+ && del "C:\vc_stdamd64.cab" \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat -UseBasicParsing -OutFile 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat' " \
+ && ( rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1" || echo. )
 
 # Prefer native x64 compiler (optional)
 RUN setx PATH C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN\amd64;%PATH%
+
 
 # Include MSBuild in path
 RUN setx PATH %PATH%;C:\Windows\Microsoft.NET\Framework\v4.0.30319
