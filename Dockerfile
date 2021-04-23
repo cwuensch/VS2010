@@ -77,8 +77,7 @@ RUN powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2
  && del "C:\vc_stdx86.msi" \
  && del "C:\vc_stdx86.cab" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_ia64" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\lib\ia64"
+ && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_ia64"
 
 
 # Copy variables script for amd64 compiler
