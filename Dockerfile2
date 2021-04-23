@@ -1,0 +1,76 @@
+FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64
+
+# Copy Windows SDK v7.1A as v7.0A (identical, except Bin)
+RUN echo Downloading... \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/WindowsSDK_7.1A.zip -UseBasicParsing -OutFile 'C:\WindowsSDK_7.1A.zip' " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/NETFX_4.0_Tools.zip -UseBasicParsing -OutFile 'C:\NETFX_4.0_Tools.zip' " \
+ && echo Extracting... \
+ && powershell -command " Expand-Archive -Path C:/WindowsSDK_7.1A.zip -DestinationPath 'C:\Program Files (x86)\Microsoft SDKs\Windows\' " \
+ && powershell -command " Expand-Archive -Path C:/NETFX_4.0_Tools.zip -DestinationPath 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\' " \
+ && ren "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A"
+ && echo Deleting... \
+ && del "C:\WindowsSDK_7.1A.zip" \
+ && del "C:\NETFX_4.0_Tools.zip"
+
+
+# Copy .NET Reference assemblies
+RUN echo Downloading... \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/Reference_Assemblies.zip -UseBasicParsing -OutFile 'C:\Reference_Assemblies.zip' " \
+ && echo Extracting... \
+ && powershell -command " Expand-Archive -Path C:/Reference_Assemblies.zip -DestinationPath 'C:\Program Files (x86)\Reference Assemblies\' " \
+ && echo Deleting... \
+ && del "C:\Reference_Assemblies.zip"
+
+
+# Copy MSBuild
+RUN echo Downloading... \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/MSBuild_x86.zip -UseBasicParsing -OutFile 'C:\MSBuild_x86.zip' " \
+ && echo Extracting... \
+ && powershell -command " Expand-Archive -Path C:/MSBuild_x86.zip -DestinationPath 'C:\Program Files (x86)\MSBuild\' " \
+ && echo Deleting... \
+ && del "C:\MSBuild_x86.zip"
+
+# Copy MSBuild assemblies
+RUN echo Downloading... \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/assembly.zip -UseBasicParsing -OutFile 'C:\assembly.zip' " \
+ && echo Extracting... \
+ && powershell -command " Expand-Archive -Path C:/assembly.zip -DestinationPath C:\Windows\assembly\ " \
+ && echo Deleting... \
+ && del "C:\assembly.zip"
+
+
+# Copy Visual Studio 2010 compilers
+RUN echo Downloading... \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/Compilers_2010_SP1.zip -UseBasicParsing -OutFile 'C:\Compilers_2010_SP1.zip' " \
+ && echo Extracting... \
+ && powershell -command " Expand-Archive -Path C:/Compilers_2010_SP1.zip -DestinationPath 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\' " \
+ && echo Deleting... \
+ && del "C:\Compilers_2010_SP1.zip"
+
+RUN setx VS100COMNTOOLS "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\\"
+
+
+# Import registry settings
+RUN echo Downloading... \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/WinSDK70.reg -UseBasicParsing -OutFile 'C:\WinSDK70.reg' " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/WinSDK71.reg -UseBasicParsing -OutFile 'C:\WinSDK71.reg' " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/MSBuild.reg -UseBasicParsing -OutFile 'C:\MSBuild.reg' " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VS2010_2.reg -UseBasicParsing -OutFile 'C:\VS2010_2.reg' " \
+ && echo Importing... \
+ && reg import "C:\WinSDK70.reg" \
+ && reg import "C:\WinSDK71.reg" \
+ && reg import "C:\MSBuild.reg" \
+ && reg import "C:\VS2010_2.reg" \
+ && echo Deleting... \
+ && del "C:\*.reg"
+
+
+# Prefer native x64 compiler (optional)
+RUN setx PATH "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN\amd64;%PATH%"
+
+# Include MSBuild in path
+RUN setx PATH "%PATH%;C:\Windows\Microsoft.NET\Framework\v4.0.30319"
+
+# Set MSBuild as entrypoint
+ENTRYPOINT ["C:/Windows/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe"]
+CMD ["/help"]

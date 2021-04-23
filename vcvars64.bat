@@ -2,7 +2,7 @@
 @set VCINSTALLDIR=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\
 @set VS100COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\
 @set DevEnvDir=%VSINSTALLDIR%Common7\IDE\
-@set WindowsSdkDir=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\
+@set WindowsSdkDir=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\
 @set FrameworkDir32=C:\Windows\Microsoft.NET\Framework\
 @set FrameworkDir64=C:\Windows\Microsoft.NET\Framework64\
 @set FrameworkVersion32=v4.0.30319
