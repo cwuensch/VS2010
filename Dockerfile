@@ -5,21 +5,16 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64
 RUN powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_1.zip -UseBasicParsing -OutFile C:/VCExpressInstall_1.zip " \
  && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_2.zip -UseBasicParsing -OutFile C:/VCExpressInstall_2.zip " \
  && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_3.zip -UseBasicParsing -OutFile C:/VCExpressInstall_3.zip " \
- && powershell -command " Expand-Archive -Path C:/VCExpressInstall_1.zip -DestinationPath C:/VCExpress " \
- && powershell -command " Expand-Archive -Path C:/VCExpressInstall_2.zip -DestinationPath C:/VCExpress " \
- && powershell -command " Expand-Archive -Path C:/VCExpressInstall_3.zip -DestinationPath C:/VCExpress " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_dummy.zip -UseBasicParsing -OutFile C:/VCExpressInstall_dummy.zip " \
+ && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_1.zip -DestinationPath C:/VCExpress " \
+ && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_2.zip -DestinationPath C:/VCExpress " \
+ && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_3.zip -DestinationPath C:/VCExpress " \
+ && powershell -command " Expand-Archive -Force -Path C:/VCExpressInstall_dummy.zip -DestinationPath C:/VCExpress " \
  && del "C:\VCExpressInstall*.zip" \
  && C:\VCExpress\Setup.exe /quiet \
  && del "C:\VS_EXPBSLN_x64_deu.MSI" \
  && del "C:\VS_EXPBSLN_x64_deu.CAB" \
  && rmdir /s /q "C:\VCExpress" \
- && rmdir /s /q "C:\Program Files\Microsoft SQL Server" \
- && rmdir /s /q "C:\Program Files\Microsoft SQL Server Compact Edition" \
- && rmdir /s /q "C:\Program Files\Microsoft Synchronization Services" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Silverlight" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft SQL Server" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft SQL Server Compact Edition" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Synchronization Services" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Microsoft Visual C++ 2010 Express - DEU" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\1031" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\SDK" \
