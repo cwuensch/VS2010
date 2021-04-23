@@ -1,0 +1,5 @@
+# Ignore a file or directory in the context root named "modules"
+*.zip
+*.cab
+*.msi
+*/*

@@ -116,15 +116,11 @@ RUN echo Downloading... \
  && echo Deleting... \
  && del "C:\vc_stdamd64.msi" \
  && del "C:\vc_stdamd64.cab" \
- && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat -UseBasicParsing -OutFile 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat' " \
- && ( rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1" || echo. )
-
-# Prefer native x64 compiler (optional)
-RUN setx PATH "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN\amd64;%PATH%"
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat -UseBasicParsing -OutFile 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat' "
 
 
-# Include MSBuild in path
-RUN setx PATH "%PATH%;C:\Windows\Microsoft.NET\Framework\v4.0.30319"
+# Include MSBuild in path (prefer native x64 compiler)
+RUN setx PATH "%PATH%;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Windows\Microsoft.NET\Framework\v4.0.30319"
 
 # Set MSBuild as entrypoint
 ENTRYPOINT ["C:/Windows/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe"]

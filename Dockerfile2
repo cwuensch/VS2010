@@ -7,7 +7,7 @@ RUN echo Downloading... \
  && echo Extracting... \
  && powershell -command " Expand-Archive -Path C:/WindowsSDK_7.1A.zip -DestinationPath 'C:\Program Files (x86)\Microsoft SDKs\Windows\' " \
  && powershell -command " Expand-Archive -Path C:/NETFX_4.0_Tools.zip -DestinationPath 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\' " \
- && ren "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A"
+ && ren "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A" v7.0A \
  && echo Deleting... \
  && del "C:\WindowsSDK_7.1A.zip" \
  && del "C:\NETFX_4.0_Tools.zip"
@@ -34,7 +34,7 @@ RUN echo Downloading... \
 RUN echo Downloading... \
  && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/assembly.zip -UseBasicParsing -OutFile 'C:\assembly.zip' " \
  && echo Extracting... \
- && powershell -command " Expand-Archive -Path C:/assembly.zip -DestinationPath C:\Windows\assembly\ " \
+ && powershell -command " Expand-Archive -Path C:/assembly.zip -DestinationPath 'C:\Windows\Microsoft.NET\assembly\' " \
  && echo Deleting... \
  && del "C:\assembly.zip"
 
@@ -65,11 +65,8 @@ RUN echo Downloading... \
  && del "C:\*.reg"
 
 
-# Prefer native x64 compiler (optional)
-RUN setx PATH "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN\amd64;%PATH%"
-
-# Include MSBuild in path
-RUN setx PATH "%PATH%;C:\Windows\Microsoft.NET\Framework\v4.0.30319"
+# Include MSBuild in path (prefer native x64 compiler)
+RUN setx PATH "%PATH%;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Windows\Microsoft.NET\Framework\v4.0.30319"
 
 # Set MSBuild as entrypoint
 ENTRYPOINT ["C:/Windows/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe"]

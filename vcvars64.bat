@@ -8,6 +8,7 @@
 @set FrameworkVersion32=v4.0.30319
 @set FrameworkVersion64=v4.0.30319
 @set Framework35Version=v3.5
+@set MSBuildExtensionsPath=C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0
 
 @echo Setting environment for using Microsoft Visual Studio 2010 x64 tools.
 @set INCLUDE=%VCINSTALLDIR%INCLUDE;%VCINSTALLDIR%ATLMFC\INCLUDE;%WindowsSdkDir%include
