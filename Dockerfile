@@ -93,10 +93,19 @@ RUN echo Downloading... \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\lib\ia64" \
  && ( rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1" || echo. )
 
+# Install VC 2010 SP1 native x64 compilers (optional)
+RUN echo Downloading... \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/vc_stdamd64/vc_stdamd64.msi -UseBasicParsing -OutFile C:\vc_stdamd64.msi " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/vc_stdamd64/vc_stdamd64.cab -UseBasicParsing -OutFile C:\vc_stdamd64.cab " \
+ && powershell -command " Invoke-WebRequest -Uri https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat -UseBasicParsing -OutFile 'C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/amd64/vcvars64.bat' " \
+ && echo Installing... \
+ && msiexec /i C:\vc_stdamd64.msi /quiet /qn \
+ && echo Deleting... \
+ && del "C:\vc_stdamd64.msi" \
+ && del "C:\vc_stdamd64.cab"
 
-# Copy variables script for amd64 compiler
-#ARG target="C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/amd64/"
-#COPY vcvars64.bat ${target}
+# Prefer native x64 compiler (optional)
+RUN setx PATH C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN\amd64;%PATH%
 
 # Include MSBuild in path
 RUN setx PATH %PATH%;C:\Windows\Microsoft.NET\Framework\v4.0.30319
