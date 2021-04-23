@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker:
+  build:
     name: Build Docker container
     runs-on: windows-2019
 
@@ -27,10 +27,7 @@ jobs:
 
     - name: Build Docker container
       run: |
-        docker run mcr.microsoft.com/windows/servercore:ltsc2016-amd64
-      
-    - name: Start Docker container
-      run: docker run --rm -v `pwd`:/vs --env VS="2010" --workdir "/vs" cwuensch/vs2010:test /m /p:Configuration=Release /p:Platform=Win32 RS\RecStrip_VS\RecStrip.sln
+        docker build -t cwuensch/vs2010:test .
       
     - name: Push Docker container 
       run: |
@@ -40,6 +37,7 @@ jobs:
   test:
     name: Test docker container
     runs-on: windows-2019
+    needs: build
 
     steps:
     - name: Checkout repository
@@ -47,5 +45,5 @@ jobs:
 
     - name: Start Docker container
       run: |
-        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:\\source" --entrypoint "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\MSBuild.exe" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=Win32 C:\\source\\RecStrip_VS\\RecStrip.sln
-        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:\\source" --entrypoint "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\MSBuild.exe" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=x64 C:\\source\\RecStrip_VS\\RecStrip.sln
+        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:/source" cwuensch/vs2010:test /m /p:Configuration=Release /p:Platform=Win32 C:\source\RecStrip_VS\RecStrip.sln
+        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:/source" cwuensch/vs2010:test /m /p:Configuration=Release /p:Platform=x64 C:\source\RecStrip_VS\RecStrip.sln
