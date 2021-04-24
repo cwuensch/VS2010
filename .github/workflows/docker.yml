@@ -27,12 +27,12 @@ jobs:
 
     - name: Build Docker container
       run: |
-        docker build -t cwuensch/vs2010:test .
+        docker build -t cwuensch/vs2010:vcexpress .
       
     - name: Push Docker container 
       run: |
         docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
-        docker push cwuensch/vs2010:test
+        docker push cwuensch/vs2010:vcexpress
 
   test:
     name: Test docker container
@@ -45,5 +45,5 @@ jobs:
 
     - name: Start Docker container
       run: |
-        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:/source" cwuensch/vs2010:test /m /p:Configuration=Release /p:Platform=Win32 C:\source\RecStrip_VS\RecStrip.sln
-        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:/source" cwuensch/vs2010:test /m /p:Configuration=Release /p:Platform=x64 C:\source\RecStrip_VS\RecStrip.sln
+        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:/source" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=Win32 C:\source\RecStrip_VS\RecStrip.sln
+        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:/source" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=x64 C:\source\RecStrip_VS\RecStrip.sln
