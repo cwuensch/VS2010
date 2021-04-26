@@ -40,59 +40,62 @@ RUN echo Downloading... \
  && del "C:\MSBuild_x86.zip" \
  && del "C:\MSBuild.reg"
 
-# Copy MSBuild assemblies
+
+# Copy Visual Studio 2010 compilers
 RUN echo Downloading... \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compilers_2010_SP1.zip', 'C:\Compilers_2010_SP1.zip') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VS2010_2.reg', 'C:\VS2010_2.reg') " \
+ && echo Extracting... \
+ && powershell -command " Expand-Archive -Path C:/Compilers_2010_SP1.zip -DestinationPath 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\' " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat', 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat') " \
+ && echo Registry import... \
+ && reg import "C:\VS2010_2.reg" \
+ && echo Deleting... \
+ && del "C:\Compilers_2010_SP1.zip" \
+ && del "C:\VS2010_2.reg"
+
+# Copy VS2010 compiler assemblies
+RUN echo Downloading... \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/assembly.NET.zip', 'C:\assembly.NET.zip') " \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/assembly.zip', 'C:\assembly.zip') " \
  && echo Extracting... \
- && powershell -command " Expand-Archive -Path C:/assembly.zip -DestinationPath 'C:\Windows\Microsoft.NET\assembly\' " \
+ && powershell -command " Expand-Archive -Path C:/assembly.NET.zip -DestinationPath 'C:\Windows\Microsoft.NET\assembly\' " \
+ && powershell -command " Expand-Archive -Path C:/assembly.zip -DestinationPath 'C:\Windows\assembly\' " \
  && echo Deleting... \
+ && del "C:\assembly.NET.zip" \
  && del "C:\assembly.zip"
 
-
-## Copy Visual Studio 2010 compilers
-#RUN echo Downloading... \
-# && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compilers_2010_SP1.zip', 'C:\Compilers_2010_SP1.zip') " \
-# && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VS2010_2.reg', 'C:\VS2010_2.reg') " \
-# && echo Extracting... \
-# && powershell -command " Expand-Archive -Path C:/Compilers_2010_SP1.zip -DestinationPath 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\' " \
-# && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat', 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat') " \
-# && echo Registry import... \
-# && reg import "C:\VS2010_2.reg" \
-# && echo Deleting... \
-# && del "C:\Compilers_2010_SP1.zip" \
-# && del "C:\VS2010_2.reg"
-
+RUN setx VS100COMNTOOLS "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\\"
 
 # Install VC 2010 SP1 x86 compilers (incl. cross-compiler for x64)
-RUN echo Downloading... \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SDK7/vc_stdx86.msi', 'C:\vc_stdx86.msi') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SDK7/vc_stdx86.cab', 'C:\vc_stdx86.cab') " \
- && echo Installing... \
- && msiexec /i C:\vc_stdx86.msi /quiet /qn \
- && echo Deleting... \
- && del "C:\vc_stdx86.msi" \
- && del "C:\vc_stdx86.cab" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_ia64" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\ia64" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\lib\ia64" \
- && ( rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1" || echo. )
-
-# Install VC 2010 SP1 native x64 compilers (optional)
-RUN echo Downloading... \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SDK7/vc_stdamd64.msi', 'C:\vc_stdamd64.msi') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SDK7/vc_stdamd64.cab', 'C:\vc_stdamd64.cab') " \
- && echo Installing... \
- && msiexec /i C:\vc_stdamd64.msi /quiet /qn \
- && echo Deleting... \
- && del "C:\vc_stdamd64.msi" \
- && del "C:\vc_stdamd64.cab" \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat', 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat') "
-
-RUN setx VS100COMNTOOLS "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\\"
+#RUN echo Downloading... \
+# && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SDK7/vc_stdx86.msi', 'C:\vc_stdx86.msi') " \
+# && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SDK7/vc_stdx86.cab', 'C:\vc_stdx86.cab') " \
+# && echo Installing... \
+# && msiexec /i C:\vc_stdx86.msi /quiet /qn \
+# && echo Deleting... \
+# && del "C:\vc_stdx86.msi" \
+# && del "C:\vc_stdx86.cab" \
+# && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_ia64" \
+# && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\ia64" \
+# && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\lib\ia64" \
+# && ( rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1" || echo. )
+#
+## Install VC 2010 SP1 native x64 compilers (optional)
+#RUN echo Downloading... \
+# && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SDK7/vc_stdamd64.msi', 'C:\vc_stdamd64.msi') " \
+# && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SDK7/vc_stdamd64.cab', 'C:\vc_stdamd64.cab') " \
+# && echo Installing... \
+# && msiexec /i C:\vc_stdamd64.msi /quiet /qn \
+# && echo Deleting... \
+# && del "C:\vc_stdamd64.msi" \
+# && del "C:\vc_stdamd64.cab" \
+# && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat', 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat') "
 
 
 # Set path (experimental)
 #RUN setx PATH "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\VCPackages;c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\NETFX 4.0 Tools;c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin;%PATH%"
+RUN setx PATH "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\;%PATH%"
 
 # Include MSBuild in path (prefer native x64 compiler)
 RUN setx PATH "%PATH%;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Windows\Microsoft.NET\Framework\v4.0.30319"
