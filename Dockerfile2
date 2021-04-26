@@ -4,13 +4,19 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64
 RUN echo Downloading... \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/WindowsSDK_7.1A.zip', 'C:\WindowsSDK_7.1A.zip') " \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/NETFX_4.0_Tools.zip', 'C:\NETFX_4.0_Tools.zip') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/WinSDK70.reg', 'C:\WinSDK70.reg') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/WinSDK71.reg', 'C:\WinSDK71.reg') " \
  && echo Extracting... \
  && powershell -command " Expand-Archive -Path C:/WindowsSDK_7.1A.zip -DestinationPath 'C:\Program Files (x86)\Microsoft SDKs\Windows\' " \
  && powershell -command " Expand-Archive -Path C:/NETFX_4.0_Tools.zip -DestinationPath 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\' " \
  && ren "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A" v7.0A \
+ && echo Registry import... \
+ && reg import "C:\WinSDK70.reg" \
+ && reg import "C:\WinSDK71.reg" \
  && echo Deleting... \
  && del "C:\WindowsSDK_7.1A.zip" \
- && del "C:\NETFX_4.0_Tools.zip"
+ && del "C:\NETFX_4.0_Tools.zip" \
+ && del "C:\*.reg"
 
 
 # Copy .NET Reference assemblies
@@ -25,10 +31,14 @@ RUN echo Downloading... \
 # Copy MSBuild
 RUN echo Downloading... \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/MSBuild_x86.zip', 'C:\MSBuild_x86.zip') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/MSBuild.reg', 'C:\MSBuild.reg') " \
  && echo Extracting... \
  && powershell -command " Expand-Archive -Path C:/MSBuild_x86.zip -DestinationPath 'C:\Program Files (x86)\MSBuild\' " \
+ && echo Registry import... \
+ && reg import "C:\MSBuild.reg" \
  && echo Deleting... \
- && del "C:\MSBuild_x86.zip"
+ && del "C:\MSBuild_x86.zip" \
+ && del "C:\MSBuild.reg"
 
 # Copy MSBuild assemblies
 RUN echo Downloading... \
@@ -42,11 +52,16 @@ RUN echo Downloading... \
 ## Copy Visual Studio 2010 compilers
 #RUN echo Downloading... \
 # && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compilers_2010_SP1.zip', 'C:\Compilers_2010_SP1.zip') " \
+# && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VS2010_2.reg', 'C:\VS2010_2.reg') " \
 # && echo Extracting... \
 # && powershell -command " Expand-Archive -Path C:/Compilers_2010_SP1.zip -DestinationPath 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\' " \
 # && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat', 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat') " \
+# && echo Registry import... \
+# && reg import "C:\VS2010_2.reg" \
 # && echo Deleting... \
-# && del "C:\Compilers_2010_SP1.zip"
+# && del "C:\Compilers_2010_SP1.zip" \
+# && del "C:\VS2010_2.reg"
+
 
 # Install VC 2010 SP1 x86 compilers (incl. cross-compiler for x64)
 RUN echo Downloading... \
@@ -76,23 +91,8 @@ RUN echo Downloading... \
 RUN setx VS100COMNTOOLS "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\\"
 
 
-# Import registry settings
-RUN echo Downloading... \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/WinSDK70.reg', 'C:\WinSDK70.reg') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/WinSDK71.reg', 'C:\WinSDK71.reg') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/MSBuild.reg', 'C:\MSBuild.reg') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VS2010_2.reg', 'C:\VS2010_2.reg') " \
- && echo Importing... \
- && reg import "C:\WinSDK70.reg" \
- && reg import "C:\WinSDK71.reg" \
- && reg import "C:\MSBuild.reg" \
- && reg import "C:\VS2010_2.reg" \
- && echo Deleting... \
- && del "C:\*.reg"
-
-
 # Set path (experimental)
-RUN setx PATH "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\VCPackages;c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\NETFX 4.0 Tools;c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin;%PATH%"
+#RUN setx PATH "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\VCPackages;c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\NETFX 4.0 Tools;c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin;%PATH%"
 
 # Include MSBuild in path (prefer native x64 compiler)
 RUN setx PATH "%PATH%;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Windows\Microsoft.NET\Framework\v4.0.30319"

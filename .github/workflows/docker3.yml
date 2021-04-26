@@ -1,0 +1,52 @@
+name: Build for all
+
+on:
+  push:
+    branches: [ master, RS3 ]
+  pull_request:
+    branches: [ master, RS3 ]
+
+
+jobs:
+  linuxbuild:
+    name: Build for Linux
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install MinGW64
+      run: sudo apt-get install gcc-mingw-w64
+
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+#      with:
+#        submodules: recursive
+
+    - name: Adapt Makefile for non-Topfield
+      run: |
+        sed -i 's/-DLINUX -D_REENTRANT -static //' RS/Makefile
+        sed -i '/include \${BASE}\/include\/tool.mk/d' RS/Makefile
+    - name: Compile MinGW x64
+      run: |
+        cd ${{ github.workspace }}/RS
+        rm -f RecStrip *.o
+        make
+        mv RecStrip RecStrip_x64
+
+    - name: Adapt Makefile for x86
+      run: |
+        sed -i 's/CFLAGS   +=/CFLAGS   += -m32/' RS/Makefile
+        sed -i 's/CXXFLAGS +=/CXXFLAGS += -m32/' RS/Makefile
+        sed -i 's/LDFLAGS  +=/LDFLAGS  += -m32/' RS/Makefile
+    - name: Compile Linux x86
+      run: |
+        cd ${{ github.workspace }}/RS
+        rm -f RS/RecStrip *.o
+        make
+
+    - name: Copy build artefact
+      uses: actions/upload-artifact@v2
+      with:
+        name: RecStrip_Linux
+        path: |
+          ${{ github.workspace }}/RS/RecStrip
+          ${{ github.workspace }}/RS/RecStrip_x64
