@@ -7,33 +7,33 @@ RUN echo Downloading... \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_1.zip', 'C:\VCExpressInstall_1.zip') " \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_2.zip', 'C:\VCExpressInstall_2.zip') " \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_3.zip', 'C:\VCExpressInstall_3.zip') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_4.zip', 'C:\VCExpressInstall_4.zip') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_5.z01', 'C:\VCExpressInstall_5.z01') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_5.z02', 'C:\VCExpressInstall_5.z02') " \
- && echo  ALT2: powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_dummy.zip', 'C:\VCExpressInstall_dummy.zip') " \
+ && echo  ALT2: powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_4.zip', 'C:\VCExpressInstall_4.zip') " \
+ && echo  ALT2: powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_5.z01', 'C:\VCExpressInstall_5.z01') " \
+ && echo  ALT2: powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_5.z02', 'C:\VCExpressInstall_5.z02') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_dummy.zip', 'C:\VCExpressInstall_dummy.zip') " \
  && echo Extracting... \
  && echo  ALT: powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall.zip -DestinationPath C:\VCExpress " \
- && copy /B "C:\VCExpressInstall_5.z01" + "C:\VCExpressInstall_5.z02" "C:\VCExpressInstall_5.zip" \
+ && echo  ALT2: copy /B "C:\VCExpressInstall_5.z01" + "C:\VCExpressInstall_5.z02" "C:\VCExpressInstall_5.zip" \
  && powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall_1.zip -DestinationPath C:\VCExpress " \
  && powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall_2.zip -DestinationPath C:\VCExpress " \
  && powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall_3.zip -DestinationPath C:\VCExpress " \
- && powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall_4.zip -DestinationPath C:\VCExpress " \
- && powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall_5.zip -DestinationPath C:\VCExpress " \
- && echo  ALT2: powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall_dummy.zip -DestinationPath C:\VCExpress " \
+ && echo  ALT2: powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall_4.zip -DestinationPath C:\VCExpress " \
+ && echo  ALT2: powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall_5.zip -DestinationPath C:\VCExpress " \
+ && echo powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall_dummy.zip -DestinationPath C:\VCExpress " \
  && del "C:\VCExpressInstall_*" \
  && echo Installing... \
- && C:\VCExpress\Setup.exe /quiet \
+ && ( C:\VCExpress\Setup.exe /quiet || echo. ) \
  && echo Deleting... \
  && del "C:\VS_EXPBSLN_x64_deu.MSI" \
  && del "C:\VS_EXPBSLN_x64_deu.CAB" \
  && rmdir /s /q "C:\VCExpress" \
- && rmdir /s /q "C:\Program Files\Microsoft SQL Server" \
- && rmdir /s /q "C:\Program Files\Microsoft SQL Server Compact Edition" \
- && rmdir /s /q "C:\Program Files\Microsoft Synchronization Services" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Silverlight" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft SQL Server" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft SQL Server Compact Edition" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Synchronization Services" \
+ && ( rmdir /s /q "C:\Program Files\Microsoft SQL Server" || echo. ) \
+ && ( rmdir /s /q "C:\Program Files\Microsoft SQL Server Compact Edition" || echo. ) \
+ && ( rmdir /s /q "C:\Program Files\Microsoft Synchronization Services" || echo. ) \
+ && ( rmdir /s /q "C:\Program Files (x86)\Microsoft Silverlight" || echo. ) \
+ && ( rmdir /s /q "C:\Program Files (x86)\Microsoft SQL Server" || echo. ) \
+ && ( rmdir /s /q "C:\Program Files (x86)\Microsoft SQL Server Compact Edition" || echo. ) \
+ && ( rmdir /s /q "C:\Program Files (x86)\Microsoft Synchronization Services" || echo. ) \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Microsoft Visual C++ 2010 Express - DEU" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\1031" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\SDK" \
@@ -77,7 +77,7 @@ RUN echo Downloading... \
 RUN echo Downloading... \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/WindowsSDK_7.1A.zip', 'C:\WindowsSDK_7.1A.zip') " \
  && echo Extracting... \
- && powershell -command " Expand-Archive -Path C:\WindowsSDK_7.1A.zip -DestinationPath 'C:\Program Files (x86)\Microsoft SDKs\Windows\' " \
+ && powershell -command " Expand-Archive -Force -Path C:\WindowsSDK_7.1A.zip -DestinationPath 'C:\Program Files (x86)\Microsoft SDKs\Windows\' " \
  && del "C:\WindowsSDK_7.1A.zip" \
  && echo Copying... \
  && xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib\x64" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64\" \
