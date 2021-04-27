@@ -47,7 +47,8 @@ RUN echo Downloading... \
  && copy "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\mspdb*.*" "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE2\" \
  && ( del /s /f /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\*" || echo. ) \
  && xcopy /s /y "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE2\*" "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\" \
- && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE2"
+ && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE2" \
+ && del /f /q C:\Windows\symbols\dll\msvc*.ia64.pdb
 
 #RUN setx VS100COMNTOOLS "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\\"
 
@@ -65,7 +66,7 @@ RUN echo Downloading... \
 # && del "C:\cab*.cab" \
 # && echo Copying... \
 # && xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Lib\x64" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64\" \
-# && xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Lib\IA64" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\IA64\" \
+# && echo  EVTL: xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Lib\IA64" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\IA64\" \
 # && copy /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Include\*.*s" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\" \
 # && rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1"
 #
@@ -81,9 +82,9 @@ RUN echo Downloading... \
  && del "C:\WindowsSDK_7.1A.zip" \
  && echo Copying... \
  && xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib\x64" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64\" \
+ && echo  EVTL: xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib\IA64" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\IA64\" \
  && copy /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\*.*s" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\" \
  && copy /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\WinRes.h" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\" \
- && xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib\x64" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64\" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\de" \
  && del /f /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\*.*" \
  && xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\" \
@@ -105,7 +106,8 @@ RUN echo Downloading... \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_ia64" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\ia64" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\lib\ia64" \
- && ( rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1" || echo. )
+ && ( rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1" || echo. ) \
+ && del /f /q C:\Windows\symbols\dll\msvc*.ia64.pdb
 
 # Install VC 2010 SP1 native x64 compilers (optional)
 RUN echo Downloading... \

@@ -22,9 +22,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1
-
     - name: Build Docker container
       run: |
         docker build -t cwuensch/vs2010:vcexpress .
@@ -42,8 +39,24 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        repository: cwuensch/RecStrip
+#        ref: refs/heads/release
 
     - name: Start Docker container
       run: |
-        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:/source" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=Win32 C:\source\RecStrip_VS\RecStrip.sln
-        docker run --rm -v ${{ github.workspace }}/RS:C:/source/ --workdir "C:/source" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=x64 C:\source\RecStrip_VS\RecStrip.sln
+        docker run --rm -v ${{ github.workspace }}:C:/source/ --workdir "C:/source" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=Win32 RecStrip_VS/RecStrip.sln
+        docker run --rm -v ${{ github.workspace }}:C:/source/ --workdir "C:/source" cwuensch/vs2010:vcexpress /m /p:Configuration=Release /p:Platform=x64 RecStrip_VS/RecStrip.sln
+
+    - name: Rename compiled files
+      run: |
+        move "RecStrip_VS\Release\RecStrip.exe" "RecStrip_VS\RecStrip_Win32.exe"
+        move "RecStrip_VS\x64\Release\RecStrip.exe" "RecStrip_VS\RecStrip_x64.exe"
+
+    - name: Copy build artefact
+      uses: actions/upload-artifact@v2
+      with:
+        name: RecStrip_Windows
+        path: |
+          ${{ github.workspace }}/RecStrip_VS/RecStrip_Win32.exe
+          ${{ github.workspace }}/RecStrip_VS/RecStrip_x64.exe
