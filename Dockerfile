@@ -4,13 +4,13 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64
 # Install Visual Studio 2010 Express
 RUN echo Downloading... \
  && echo  ALT: powershell -command " (New-Object Net.WebClient).DownloadFile('http://mc.tms-taps.net/temp/VS/VCExpressInstall.zip', 'C:\VCExpressInstall.zip') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_1.zip', 'C:\VCExpressInstall_1.zip') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_2.zip', 'C:\VCExpressInstall_2.zip') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_3.zip', 'C:\VCExpressInstall_3.zip') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/VCExpressInstall/VCExpressInstall_1.zip', 'C:\VCExpressInstall_1.zip') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/VCExpressInstall/VCExpressInstall_2.zip', 'C:\VCExpressInstall_2.zip') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/VCExpressInstall/VCExpressInstall_3.zip', 'C:\VCExpressInstall_3.zip') " \
  && echo  ALT2: powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_4.zip', 'C:\VCExpressInstall_4.zip') " \
  && echo  ALT2: powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_5.z01', 'C:\VCExpressInstall_5.z01') " \
  && echo  ALT2: powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_5.z02', 'C:\VCExpressInstall_5.z02') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/VCExpressInstall/VCExpressInstall_dummy.zip', 'C:\VCExpressInstall_dummy.zip') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/VCExpressInstall/VCExpressInstall_dummy.zip', 'C:\VCExpressInstall_dummy.zip') " \
  && echo Extracting... \
  && echo  ALT: powershell -command " Expand-Archive -Force -Path C:\VCExpressInstall.zip -DestinationPath C:\VCExpress " \
  && echo  ALT2: copy /B "C:\VCExpressInstall_5.z01" + "C:\VCExpressInstall_5.z02" "C:\VCExpressInstall_5.zip" \
@@ -76,7 +76,7 @@ RUN echo Downloading... \
 
 # Copy headers and libs from Windows SDK v7.1A into v7.0A (identical), copy Tools from v7.1A
 RUN echo Downloading... \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/WindowsSDK_7.1A.zip', 'C:\WindowsSDK_7.1A.zip') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/WindowsSDK_7.1A.zip', 'C:\WindowsSDK_7.1A.zip') " \
  && echo Extracting... \
  && powershell -command " Expand-Archive -Force -Path C:\WindowsSDK_7.1A.zip -DestinationPath 'C:\Program Files (x86)\Microsoft SDKs\Windows\' " \
  && del "C:\WindowsSDK_7.1A.zip" \
@@ -89,15 +89,15 @@ RUN echo Downloading... \
  && del /f /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\*.*" \
  && xcopy /s /y "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin" "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\" \
  && rmdir /s /q "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A" \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/WinSDK71.reg', 'C:\WinSDK71.reg') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/WinSDK71.reg', 'C:\WinSDK71.reg') " \
  && reg import C:\WinSDK71.reg \
  && del C:\WinSDK71.reg
 
 
 # Install VC 2010 SP1 x86 compilers (incl. cross-compiler for x64)
 RUN echo Downloading... \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SP1/vc_stdx86.msi', 'C:\vc_stdx86.msi') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SP1/vc_stdx86.cab', 'C:\vc_stdx86.cab') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/Compiler_SP1/vc_stdx86.msi', 'C:\vc_stdx86.msi') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/Compiler_SP1/vc_stdx86.cab', 'C:\vc_stdx86.cab') " \
  && echo Installing... \
  && msiexec /i C:\vc_stdx86.msi /quiet /qn \
  && echo Deleting... \
@@ -111,14 +111,14 @@ RUN echo Downloading... \
 
 # Install VC 2010 SP1 native x64 compilers (optional)
 RUN echo Downloading... \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SP1/vc_stdamd64.msi', 'C:\vc_stdamd64.msi') " \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/Compiler_SP1/vc_stdamd64.cab', 'C:\vc_stdamd64.cab') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/Compiler_SP1/vc_stdamd64.msi', 'C:\vc_stdamd64.msi') " \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/Compiler_SP1/vc_stdamd64.cab', 'C:\vc_stdamd64.cab') " \
  && echo Installing... \
  && msiexec /i C:\vc_stdamd64.msi /quiet /qn \
  && echo Deleting... \
  && del "C:\vc_stdamd64.msi" \
  && del "C:\vc_stdamd64.cab" \
- && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/master/vcvars64.bat', 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat') "
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/vcexpress/vcvars64.bat', 'C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat') "
 
 
 # Include MSBuild in path (prefer native x64 compiler)
