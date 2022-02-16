@@ -41,14 +41,23 @@ RUN echo Downloading... \
  && del "C:\MSBuild.reg"
 
 
+# Import VS2010 registry entries
+RUN echo Downloading... \
+ && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/minimal/VS.reg', 'C:\VS.reg') " \
+ && echo Registry import... \
+ && reg import "C:\VS.reg" \
+ && echo Deleting... \
+ && del "C:\VS.reg"
+
 RUN setx VS100COMNTOOLS "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\\"
+
 
 # Install VC 2010 SP1 x86 compilers (incl. cross-compiler for x64)
 RUN echo Downloading... \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/minimal/Compiler_SDK7/vc_stdx86.msi', 'C:\vc_stdx86.msi') " \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/minimal/Compiler_SDK7/vc_stdx86.cab', 'C:\vc_stdx86.cab') " \
  && echo Installing... \
- && msiexec /i C:\vc_stdx86.msi /quiet /qn \
+ && start /w msiexec.exe /i C:\vc_stdx86.msi /quiet /qn \
  && echo Deleting... \
  && del "C:\vc_stdx86.msi" \
  && del "C:\vc_stdx86.cab" \
@@ -62,7 +71,7 @@ RUN echo Downloading... \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/minimal/Compiler_SDK7/vc_stdamd64.msi', 'C:\vc_stdamd64.msi') " \
  && powershell -command " (New-Object Net.WebClient).DownloadFile('https://github.com/cwuensch/VS2010/raw/minimal/Compiler_SDK7/vc_stdamd64.cab', 'C:\vc_stdamd64.cab') " \
  && echo Installing... \
- && msiexec /i C:\vc_stdamd64.msi /quiet /qn \
+ && start /w msiexec.exe /i C:\vc_stdamd64.msi /quiet /qn \
  && echo Deleting... \
  && del "C:\vc_stdamd64.msi" \
  && del "C:\vc_stdamd64.cab" \
