@@ -1,5 +1,5 @@
 #FROM cwuensch/vs2010:vcexpress
-FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64
+FROM mcr.microsoft.com/windows/servercore:ltsc2025-amd64
 
 # Install Visual Studio 2010 Express
 RUN echo Downloading... \

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64
+FROM mcr.microsoft.com/windows/servercore:ltsc2025-amd64
 
 # Copy Windows SDK v7.1A as v7.0A (identical, except Bin)
 RUN echo Downloading... \
