@@ -16,24 +16,42 @@ on:
 jobs:
   winbuild:
     name: Build for Windows (VS_2010)
-    runs-on: windows-2016
+    runs-on: windows-2025
 #    env:
 #      SOLUTION_FILE_PATH: RecStrip_VS/RecStrip.sln
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v6
+      with:
+        lfs: true
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v3
 #      with:
 #        vs-version: '[10.0,10.1)'
        
-    - name: Install vcexpress2010
-      run: choco install vcexpress2010
+#    - name: Install vcexpress2010
+#      run: choco install vcexpress2010
 #
 #    - name: Install Visual C++ 2010 Service Pack 1 Compiler Update
 #      run: choco install kb2519277
+
+    - name: Install Visual Studio Express 2010 (nicht notwendig!)
+      shell: powershell
+      run: |
+        echo "Extracting..."
+        Expand-Archive -Force -Path VCExpressInstall/VCExpressInstall_1.zip -DestinationPath C:\VCExpress
+        Expand-Archive -Force -Path VCExpressInstall/VCExpressInstall_2.zip -DestinationPath C:\VCExpress
+        Expand-Archive -Force -Path VCExpressInstall/VCExpressInstall_3.zip -DestinationPath C:\VCExpress
+        Expand-Archive -Force -Path VCExpressInstall/VCExpressInstall_dummy.zip -DestinationPath C:\VCExpress
+        rm "C:\VCExpressInstall_*"
+        echo "Installing..."
+        ( C:\VCExpress\Setup.exe /quiet | Out-Null ) ; ( echo "" )
+        echo "Deleting..."
+        rm -r -fo "C:\VCExpress"
+        echo "Fertig."
+        exit 0
 
     - name: Run Windows SDK 7.1 installer
       run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\WinSDKBuild\WinSDKBuild_x86.msi /quiet'
@@ -51,17 +69,23 @@ jobs:
 
     - name: Download & extract Microsoft VC 2010 Compilers
       run: |
-        Expand-Archive -Force -Path "Compilers_2010_x86_x64.zip" -DestinationPath "C:\Program Files (x86)\Microsoft Visual Studio 10.0\"
+        Expand-Archive -Force -Path "Compilers_2010_SP1.zip" -DestinationPath "C:\Program Files (x86)\Microsoft Visual Studio 10.0\"
         copy vcvars32.bat "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\"
         copy vcvars64.bat "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\"
 #        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.120&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile Compilers_2010_x86_x64.zip
 #        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.117&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
 #        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.118&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat"
 
-    - name: Download & extract MSBuild config
+    - name: Extract NETFX Tools
+      shell: powershell
+      run: |
+        Expand-Archive -Force -Path NETFX_4.0_Tools.zip -DestinationPath "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\"
+
+    - name: Copy MSBuild Compiler Profiles
       run: |
         Expand-Archive -Force -Path "MSBuild_x86.zip" -DestinationPath "C:\Program Files (x86)\MSBuild\"
 #        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.113&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile MSBuild_x86.zip
+        reg import MSBuild.reg
 
     - name: Setup Environment x86
       run: |
@@ -123,7 +147,7 @@ jobs:
 #        mv RecStrip_VS/x64/Release/RecStrip.exe RecStrip_VS/x64/Release/RecStrip_x64.exe
 
     - name: Copy build artefact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v7
       with:
         name: RecStrip_WindowsXP
         path: |
