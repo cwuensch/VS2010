@@ -4,11 +4,10 @@ name: Build Mini container
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  # Triggers the workflow on release creation
+  release:
+    types: [ created ]
+
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -16,29 +15,31 @@ on:
 jobs:
   build:
     name: Build minimal container
-    runs-on: windows-2019
+    runs-on: windows-2025
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v6
+      with:
+        lfs: true
 
     - name: Build Docker container
       run: |
-        docker build -f Dockerfile2 -t cwuensch/vs2010:minimal2 .
+        docker build -f Dockerfile2 -t "cwuensch/vs2010:minimal2" .
       
-    - name: Push Docker container 
+    - name: Upload Docker image 
       run: |
         docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
         docker push cwuensch/vs2010:minimal2
 
   test:
     name: Test minimal container
-    runs-on: windows-2019
+    runs-on: windows-2025
     needs: build
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v6
       with:
         repository: cwuensch/RecStrip
 #        ref: refs/heads/release
@@ -54,7 +55,7 @@ jobs:
         move "RecStrip_VS\x64\Release\RecStrip.exe" "RecStrip_VS\RecStrip_x64.exe"
 
     - name: Copy build artefact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v7
       with:
         name: RecStrip_Windows
         path: |
