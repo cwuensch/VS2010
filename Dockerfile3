@@ -1,0 +1,13 @@
+FROM mcr.microsoft.com/windows/servercore:ltsc2025-amd64
+
+
+# Download and install MS Build Tools 141_xp
+RUN echo Downloading... \
+ && powershell -command " Invoke-WebRequest -Uri 'https://aka.ms/vs/17/release/vs_buildtools.exe' -OutFile 'C:\vs_buildtools.exe' " \
+ && C:\vs_buildtools.exe --wait --installPath C:\BuildTools --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 --add Microsoft.VisualStudio.Component.WinXP --includeRecommended --quiet --norestart \
+ && rem C:\vs_buildtools.exe --wait --installPath C:\BuildTools --add Microsoft.VisualStudio.Component.WinXP --add Microsoft.VisualStudio.Component.Windows10SDK.19041 --includeRecommended --quiet --norestart \
+ && del C:\vs_buildtools.exe
+
+# Set MSBuild as entrypoint
+ENTRYPOINT ["C:/BuildTools/MSBuild/Current/Bin/MSBuild.exe"]
+CMD ["/help"]

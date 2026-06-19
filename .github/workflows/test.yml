@@ -59,8 +59,8 @@ jobs:
     - name: Run C Compiler x86 installer
       run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\vc_stdx86\vc_stdx86.msi /quiet'
 
-    - name: Run C Compiler x64 installer
-      run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\vc_stdx64\vc_stdx64.msi /quiet'
+#    - name: Run C Compiler x64 installer
+#      run: Start-Process msiexec.exe -Wait -ArgumentList '/I install\vc_stdx64\vc_stdx64.msi /quiet'
 
     - name: Download & extract Microsoft Windows SDK 7.1
       run: |
@@ -142,7 +142,17 @@ jobs:
     
     - name: Build x64
       working-directory: ${{env.GITHUB_WORKSPACE}}
+      env:
+        VSINSTALLDIR: C:\Program Files (x86)\Microsoft Visual Studio 10.0\
+        VCINSTALLDIR:  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\
+        VS100COMNTOOLS: C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\
+        WindowsSdkDir:  C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\
+        LIB: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\lib\amd64;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64
+        INCLUDE: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\include
+        PATH: C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin;C:\Windows\Microsoft.NET\Framework\v4.0.30319;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;${{env.PATH}}
       run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86_amd64
+        set
         msbuild /m /p:Configuration=Release /p:Platform=x64 RS\RecStrip_VS\RecStrip.sln
 #        mv RecStrip_VS/x64/Release/RecStrip.exe RecStrip_VS/x64/Release/RecStrip_x64.exe
 
