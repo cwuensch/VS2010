@@ -84,8 +84,8 @@ jobs:
     - name: Copy MSBuild Compiler Profiles
       run: |
         Expand-Archive -Force -Path "MSBuild_x86.zip" -DestinationPath "C:\Program Files (x86)\MSBuild\"
-#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.113&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile MSBuild_x86.zip
         reg import MSBuild.reg
+#        Invoke-WebRequest -Uri "https://my.hidrive.com/api/file?attachment=true&pid=b1605985184.113&access_token=G5QDMZJicCSp1YrK1eGr" -UseBasicParsing -OutFile MSBuild_x86.zip
 
     - name: Setup Environment x86
       run: |
