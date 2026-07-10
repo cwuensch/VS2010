@@ -14,7 +14,7 @@ RUN echo Downloading... \
       --remove Microsoft.VisualStudio.Component.Windows10SDK.14393 \
       --remove Microsoft.VisualStudio.Component.Windows81SDK \
       --nocache --quiet --norestart \
- && rem C:\vs_buildtools.exe --wait --installPath C:\BuildTools --add Microsoft.VisualStudio.Component.WinXP --add Microsoft.VisualStudio.Component.Windows10SDK.19041 --includeRecommended --quiet --norestart \
+ && rem C:\vs_buildtools.exe --wait --installPath C:\BuildTools --add Microsoft.VisualStudio.Component.WinXP --add Microsoft.VisualStudio.Component.Windows10SDK.19041 --includeRecommended --nocache --quiet --norestart \
  && del /s /q %TEMP%\*.* \
  && del C:\vs_buildtools.exe
 
